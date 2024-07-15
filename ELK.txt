@@ -1,5 +1,5 @@
 ELK Instalation steps
-
+Ubuntu 22.04
 ----------------------------------------------------------------------------------
 curl -fsSL https://artifacts.elastic.co/GPG-KEY-elasticsearch |sudo gpg --dearmor -o /usr/share/keyrings/elastic.gpg
 echo "deb [signed-by=/usr/share/keyrings/elastic.gpg] https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list
@@ -21,6 +21,10 @@ Kibana version must be at least 7.14.0
 sudo apt-get install kibana=7.14.0
 cd /etc/kibana.yml
 change Network or port na elasticsearch server IP
+sudo systemctl daemon-reload
+sudo systemctl start kibana
+sudo systemctl enable kibana
+sudo systemctl status kibana
 --------------------------------------------------------------------------------
 sudo apt-get install logstash=7.10.1
 
@@ -64,7 +68,8 @@ output {
 Start and enable Logstash by running:
 sudo systemctl start logstash
 sudo systemctl enable logstash
-
+sudo systemctl daemon-reload
+sudo systemctl status logstash
 ----------------------------------------------------------------------------------
 sudo apt install filebeat
 sudo nano /etc/filebeat/filebeat.yml
@@ -80,7 +85,7 @@ sudo apt install metricbeat
 sudo metricbeat modules enable system
 sudo metricbeat setup --pipelines --modules system
 sudo metricbeat setup -e
-
+sudo systemctl daemon-reload
  ----------------------------------ops-----------------------------
 sudo metricbeat setup --index-management -E output.logstash.enabled=troo -E
 -----------------------------------------------------------------
