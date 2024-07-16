@@ -7,7 +7,7 @@ sudo apt update
 --------------------------------------------------------------------------------
 sudo apt install openjdk-11-jdk
 --------------------------------------------------------------------------------
-sudo apt-get install elasticsearch=7.14.0
+sudo apt-get install elasticsearch=8.14.0
 sudo nano /etc/elasticsearch/elasticsearch.yml
 sudo nano /etc/elasticsearch/jvm.options
 -Xms512m
