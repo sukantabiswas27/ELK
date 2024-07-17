@@ -109,6 +109,26 @@ sudo systemctl enable metricbeat
 sudo systemctl status metricbeat
 sudo systemctl daemon-reload
 
+---------------------------
+nano /etc/metricbeat/metricbeat.yml
+# ================================== Logging ===================================
+
+# Sets log level. The default log level is info.
+# Available log levels are: error, warning, info, debug
+logging.level: debug
+
+# At debug level, you can selectively enable logging only for some components.
+# To enable all selectors use ["*"]. Examples of other selectors are "beat",
+# "publisher", "service".
+logging.selectors: ["*"]
+logging.to_files: true
+logging.files:
+path: /var/log/metricbeat
+name: metricbeat
+keepfiles: 7
+permissions: 0644
+
+-------------------------------
 sudo metricbeat modules enable beat-xpack
 sudo metricbeat modules enable kibana-xpack
 sudo metricbeat modules enable elasticsearch-xpack
