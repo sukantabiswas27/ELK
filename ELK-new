@@ -59,6 +59,8 @@ sudo systemctl daemon-reload
 
 --------------------------------------------------------------------------------------------------------------------------------
 xpack.security.enabled: true
+xpack.monitoring.collection.enabled: true
+xpack.monitoring.elasticsearch.collection.enabled: true
 
 cd /usr/share/elasticsearch/bin/
 sudo ./elasticsearch-setup-passwords auto -y
@@ -85,4 +87,75 @@ Changed password for user elastic
 PASSWORD elastic = AzBQ5kYKn260CRiiEzUt
 
 ----------------------------------------------------------------------------------------------------
+curl -XGET http://localhost:9200/_cluster/health?pretty
+curl -XGET -u elastic:AzBQ5kYKn260CRiiEzUt http://localhost:9200/_cluster/health?pretty
+
+sudo nano /etc/kibana/kibana.yml
+
+elasticsearch.username: "kibana_system"
+elasticsearch.password: "VuZrdAL03P98q0P1gbgx"
+
+-----------------------------------------------------------------------------------------------------
+sudo apt install metricbeat
+nano /etc/metricbeat/metricbeat.yml
+ reload.enabled: true
+ reload.period: 10s
+
+
+
+sudo systemctl start metricbeat
+sudo systemctl enable metricbeat
+sudo systemctl status metricbeat
+sudo systemctl daemon-reload
+
+sudo metricbeat modules enable beat-xpack
+sudo metricbeat modules enable kibana-xpack
+sudo metricbeat modules enable elasticsearch-xpack
+
+sudo nano elasticsearch-xpack.yml
+-----------------------------------------------
+ module: elasticsearch
+  xpack.enabled: true
+  period: 10s
+  hosts: ["http://localhost:9200"]
+  username: "remote_monitoring_user"
+  password: "gUzlcfYacFOyHTeESUfW"
+
+----------------------------------------------------
+sudo nano beat-xpack.yml
+---------------------------------------------------
+- module: beat
+  xpack.enabled: true
+  period: 10s
+  hosts: ["http://localhost:5066"]
+  username: "beats_system"
+  password: "5OIxmfuiTIK2koHlMZhv"
+
+
+------------------------------------------------
+sudo nano kibana-xpack.yml
+---------------------------------------------------
+module: kibana
+  xpack.enabled: true
+  period: 10s
+  hosts: ["localhost:5601"]
+  #basepath: ""
+  username: "remote_monitoring_user"
+  password: "gUzlcfYacFOyHTeESUfW"
+
+
+
+-------------------------------------------------
+
+
+sudo metricbeat modules enable -e
+
+--------------------------------------------------
+new server
+sudo metricbeat modules enable beat-xpack
+
+sudo systemctl status metricbeat
+sudo systemctl restart metricbeat
+sudo metricbeat modules list
+
 
