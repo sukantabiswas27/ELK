@@ -1,1 +1,88 @@
 ELK 7x
+sudo apt-get update
+apt install openjdk-8-jdk
+sudo apt-get install wget -ywget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+sudo apt-get install apt-transport-https -y
+echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list
+sudo apt-get update && sudo apt-get install elasticsearch && sudo apt-get install logstash && sudo apt-get install kibana
+
+----------------------------------------------------------------------------------------------------------------------------
+configure elasticsearch
+nano /etc/elasticsearch/elasticsearch.yml
+
+change cluster name
+cluster.name: demo-elk  
+
+give the cluster a descriptive name
+node.name: elk-1 
+
+change network binding
+network.host: 0.0.0.0  
+
+setup discovery.type as single node
+discovery.type: single-node
+--------------------------------------------------------------------------------------------------------------------------------
+sudo systemctl start elasticsearch
+curl -XGET http://localhost:9200/_cluster/health?pretty
+
+
+sudo systemctl daemon-reload
+sudo systemctl start elasticsearch
+sudo systemctl enable elasticsearch
+sudo systemctl status elasticsearch
+-----------------------------------------------------------------------------------------------------------------------------------
+configure kibana
+nano /etc/kibana/kibana.yml
+
+uncomment server.port
+server.port: 5601
+
+server base url however this needs to be corrected everytime you start and stop the server
+server.publicBaseUrl: "http://192.168.144.141:5601/"
+
+change server.host
+server.host: "0.0.0.0"
+
+change server.name
+server.name: "demo-kibana"
+
+uncomment elasticsearch.host
+elasticsearch.hosts: ["http://localhost:9200"]
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+sudo systemctl start kibana
+sudo systemctl enable kibana
+sudo systemctl status kibana
+sudo systemctl daemon-reload
+
+--------------------------------------------------------------------------------------------------------------------------------
+xpack.security.enabled: true
+
+cd /usr/share/elasticsearch/bin/
+sudo ./elasticsearch-setup-passwords auto -y
+--------------------------------------------------------------------------------------------
+Changed password for user apm_system
+PASSWORD apm_system = 4u1CXuGIMkePAq64EuJa
+
+Changed password for user kibana_system
+PASSWORD kibana_system = VuZrdAL03P98q0P1gbgx
+
+Changed password for user kibana
+PASSWORD kibana = VuZrdAL03P98q0P1gbgx
+
+Changed password for user logstash_system
+PASSWORD logstash_system = 5C7YwUne35EQSfnXKjh0
+
+Changed password for user beats_system
+PASSWORD beats_system = 5OIxmfuiTIK2koHlMZhv
+
+Changed password for user remote_monitoring_user
+PASSWORD remote_monitoring_user = gUzlcfYacFOyHTeESUfW
+
+Changed password for user elastic
+PASSWORD elastic = AzBQ5kYKn260CRiiEzUt
+
+----------------------------------------------------------------------------------------------------
+
