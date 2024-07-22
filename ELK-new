@@ -175,8 +175,10 @@ sudo metricbeat modules enable -e
 new server
 sudo metricbeat modules enable beat-xpack
 sudo systemctl start metricbeat
+sudo systemctl stop metricbeat
 sudo systemctl status metricbeat
 sudo systemctl restart metricbeat
+sudo systemctl daemon-reload
 sudo metricbeat modules list
 
 
