@@ -174,9 +174,37 @@ sudo metricbeat modules enable -e
 --------------------------------------------------
 new server
 sudo metricbeat modules enable beat-xpack
-
+sudo systemctl start metricbeat
 sudo systemctl status metricbeat
 sudo systemctl restart metricbeat
 sudo metricbeat modules list
 
 
+--------------------------------------------------------------------
+-------------------------logstash-----------------------------------
+-------------------------------------------------------------------
+sudo apt-get update && sudo apt-get install logstash
+
+
+
+
+
+input {
+  beats {
+    port => 5044
+  }
+}
+
+output {
+  elasticsearch {
+    hosts => ["http://localhost:9200"]
+    index => "%{[@metadata][beat]}-%{[@metadata][version]}" 
+    user => "elastic"
+    password => "AzBQ5kYKn260CRiiEzUt"
+  }
+}
+
+sudo systemctl start logstash
+sudo systemctl enable logstash
+sudo systemctl status logstash
+sudo systemctl daemon-reload
